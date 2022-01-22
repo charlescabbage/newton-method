@@ -84,21 +84,26 @@
         let h = math.divide(substitute(fx, x0).evaluate(), substitute(fx1, x0).evaluate())
         for (let i = 0; i < iter && math.abs(h) >= epsilon; i++) {
 
-          a = substitute(fx, xi)
-          b = substitute(fx1, xi)
-          h = math.divide(a.evaluate(), b.evaluate())
+          a = substitute(fx, xi).evaluate()
+          b = substitute(fx1, xi).evaluate()
+          h = math.divide(a, b)
 
+          // round off for output
+          a = math.round(a, r)
+          b = math.round(b, r)
+          
           solution += "<h5>Iteration "+(i+1)+":</h5>"
-          solution += "\\(f(x_"+i+")="+fx.toString().replaceAll("x","("+math.round(xi,r)+")")+"="+math.round(a.evaluate(),r)+"\\)<br>"
-          solution += "\\(f'(x_"+i+")="+fx1.toString().replaceAll("*","").replaceAll("x","("+math.round(xi,r)+")")+"="+math.round(b.evaluate(),r)+"\\)<br>"
+          solution += "\\(f(x_"+i+")="+fx.toString().replaceAll("x","("+math.round(xi,r)+")")+"="+a+"\\)<br>"
+          solution += "\\(f'(x_"+i+")="+fx1.toString().replaceAll("*","").replaceAll("x","("+math.round(xi,r)+")")+"="+b+"\\)<br>"
           solution += "\\(x_"+(i+1)+" = x_"+i+" - {f(x_"+i+") \\over f'(x_"+i+")}\\)<br>"
-          solution += "\\(x_"+(i+1)+" = "+math.round(xi,r)+" - {"+math.round(a.evaluate(),r)+" \\over "+math.round(b.evaluate(),r)+"}\\)<br>"
+          solution += "\\(x_"+(i+1)+" = "+math.round(xi,r)+" - {"+a+" \\over "+b+"}\\)<br>"
           
           // x(i+1) = x(i) - f(x) / f'(x)
           xi = math.subtract(xi, h)
           solution += "\\(x_"+(i+1)+" = "+math.round(xi,r)+"\\)<br><br>"
 
-          $('#iter-table tr:last').after('<tr><td>'+(i+1)+'</td><td>'+math.round(xi,3)+'</td><td>'+math.round(a.evaluate(),3)+'</td><td>'+math.round(b.evaluate(),3)+'</td></tr>')
+          // generate table
+          $('#iter-table tr:last').after('<tr><td>'+(i+1)+'</td><td>'+math.round(xi,3)+'</td><td>'+a+'</td><td>'+b+'</td></tr>')
         }
 
         $('#solution').html(solution);
