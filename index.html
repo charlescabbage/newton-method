@@ -78,7 +78,7 @@
         $("#iter-table").find("tr:gt(0)").remove();
 
         // f(x) and f'(x)
-        $('#function').html('$$'+fx.toString()+'$$');
+        $('#function').html('$$'+fx.toString().replaceAll('*','')+'$$');
         $('#derivative').html('$$'+fx1.toString().replaceAll('*','')+'$$');
         
         let h = math.divide(substitute(fx, x0).evaluate(), substitute(fx1, x0).evaluate())
